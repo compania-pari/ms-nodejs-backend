@@ -75,11 +75,13 @@ jobs:
           IMAGE_NAME=acr${{ vars.APELLIDO }}.azurecr.io/my-nodejs-app
           TAG=${{ steps.short.outputs.short_sha }}
           APP_NAME=aca-ms-${{ vars.APELLIDO }}-${{ vars.ENV }}
+          ACA_ENV_NAME=aca-env-${{ vars.APELLIDO }}-${{ vars.ENV }}
           RESOURCE_GROUP=rg-cicd-terraform-app-${{ vars.APELLIDO }}
           ACR_NAME=acr${{ vars.APELLIDO }}
 
           echo "IMAGE=$IMAGE_NAME:$TAG" >> $GITHUB_ENV
           echo "APP_NAME=$APP_NAME" >> $GITHUB_ENV
+          echo "ACA_ENV_NAME=$ACA_ENV_NAME" >> $GITHUB_ENV
           echo "RESOURCE_GROUP=$RESOURCE_GROUP" >> $GITHUB_ENV
           echo "ACR_NAME=$ACR_NAME" >> $GITHUB_ENV
 
@@ -87,7 +89,32 @@ jobs:
         run: |
           echo "Configurando credenciales del ACR para la Container App..."
           ACR_SERVER=$(az acr show --name $ACR_NAME --resource-group $RESOURCE_GROUP --query loginServer --output tsv)
+          ACR_ID=$(az acr show --name $ACR_NAME --resource-group $RESOURCE_GROUP --query id --output tsv)
           echo "Servidor ACR: $ACR_SERVER"
+
+          if ! az containerapp env show --name $ACA_ENV_NAME --resource-group $RESOURCE_GROUP >/dev/null 2>&1; then
+            echo "Container Apps Environment $ACA_ENV_NAME no existe. Creando..."
+            az containerapp env create \
+              --name $ACA_ENV_NAME \
+              --resource-group $RESOURCE_GROUP \
+              --location eastus
+          fi
+
+          if ! az containerapp show --name $APP_NAME --resource-group $RESOURCE_GROUP >/dev/null 2>&1; then
+            echo "Container App $APP_NAME no existe. Creando..."
+            az containerapp create \
+              --name $APP_NAME \
+              --resource-group $RESOURCE_GROUP \
+              --environment $ACA_ENV_NAME \
+              --image mcr.microsoft.com/azuredocs/containerapps-helloworld:latest \
+              --target-port 80 \
+              --ingress external \
+              --system-assigned \
+              --env-vars ENV=${{ vars.ENV }} API_PROVIDER_URL=${{ vars.API_PROVIDER_URL }}
+          fi
+
+          PRINCIPAL_ID=$(az containerapp show --name $APP_NAME --resource-group $RESOURCE_GROUP --query identity.principalId --output tsv)
+          az role assignment create --assignee $PRINCIPAL_ID --scope $ACR_ID --role AcrPull >/dev/null 2>&1 || true
           
           # Configurar la Container App para usar managed identity con el ACR
           az containerapp registry set \
@@ -143,11 +170,13 @@ jobs:
           IMAGE_NAME=acr${{ vars.APELLIDO }}.azurecr.io/my-nodejs-app
           TAG=${{ steps.short.outputs.short_sha }}
           APP_NAME=aca-ms-${{ vars.APELLIDO }}-${{ vars.ENV }}
+          ACA_ENV_NAME=aca-env-${{ vars.APELLIDO }}-${{ vars.ENV }}
           RESOURCE_GROUP=rg-cicd-terraform-app-${{ vars.APELLIDO }}
           ACR_NAME=acr${{ vars.APELLIDO }}
 
           echo "IMAGE=$IMAGE_NAME:$TAG" >> $GITHUB_ENV
           echo "APP_NAME=$APP_NAME" >> $GITHUB_ENV
+          echo "ACA_ENV_NAME=$ACA_ENV_NAME" >> $GITHUB_ENV
           echo "RESOURCE_GROUP=$RESOURCE_GROUP" >> $GITHUB_ENV
           echo "ACR_NAME=$ACR_NAME" >> $GITHUB_ENV
 
@@ -155,7 +184,32 @@ jobs:
         run: |
           echo "Configurando credenciales del ACR para la Container App..."
           ACR_SERVER=$(az acr show --name $ACR_NAME --resource-group $RESOURCE_GROUP --query loginServer --output tsv)
+          ACR_ID=$(az acr show --name $ACR_NAME --resource-group $RESOURCE_GROUP --query id --output tsv)
           echo "Servidor ACR: $ACR_SERVER"
+
+          if ! az containerapp env show --name $ACA_ENV_NAME --resource-group $RESOURCE_GROUP >/dev/null 2>&1; then
+            echo "Container Apps Environment $ACA_ENV_NAME no existe. Creando..."
+            az containerapp env create \
+              --name $ACA_ENV_NAME \
+              --resource-group $RESOURCE_GROUP \
+              --location eastus
+          fi
+
+          if ! az containerapp show --name $APP_NAME --resource-group $RESOURCE_GROUP >/dev/null 2>&1; then
+            echo "Container App $APP_NAME no existe. Creando..."
+            az containerapp create \
+              --name $APP_NAME \
+              --resource-group $RESOURCE_GROUP \
+              --environment $ACA_ENV_NAME \
+              --image mcr.microsoft.com/azuredocs/containerapps-helloworld:latest \
+              --target-port 80 \
+              --ingress external \
+              --system-assigned \
+              --env-vars ENV=${{ vars.ENV }} API_PROVIDER_URL=${{ vars.API_PROVIDER_URL }}
+          fi
+
+          PRINCIPAL_ID=$(az containerapp show --name $APP_NAME --resource-group $RESOURCE_GROUP --query identity.principalId --output tsv)
+          az role assignment create --assignee $PRINCIPAL_ID --scope $ACR_ID --role AcrPull >/dev/null 2>&1 || true
           
           # Configurar la Container App para usar managed identity con el ACR
           az containerapp registry set \
@@ -210,11 +264,13 @@ jobs:
           IMAGE_NAME=acr${{ vars.APELLIDO }}.azurecr.io/my-nodejs-app
           TAG=${{ steps.short.outputs.short_sha }}
           APP_NAME=aca-ms-${{ vars.APELLIDO }}-${{ vars.ENV }}
+          ACA_ENV_NAME=aca-env-${{ vars.APELLIDO }}-${{ vars.ENV }}
           RESOURCE_GROUP=rg-cicd-terraform-app-${{ vars.APELLIDO }}
           ACR_NAME=acr${{ vars.APELLIDO }}
 
           echo "IMAGE=$IMAGE_NAME:$TAG" >> $GITHUB_ENV
           echo "APP_NAME=$APP_NAME" >> $GITHUB_ENV
+          echo "ACA_ENV_NAME=$ACA_ENV_NAME" >> $GITHUB_ENV
           echo "RESOURCE_GROUP=$RESOURCE_GROUP" >> $GITHUB_ENV
           echo "ACR_NAME=$ACR_NAME" >> $GITHUB_ENV
 
@@ -222,7 +278,32 @@ jobs:
         run: |
           echo "Configurando credenciales del ACR para la Container App..."
           ACR_SERVER=$(az acr show --name $ACR_NAME --resource-group $RESOURCE_GROUP --query loginServer --output tsv)
+          ACR_ID=$(az acr show --name $ACR_NAME --resource-group $RESOURCE_GROUP --query id --output tsv)
           echo "Servidor ACR: $ACR_SERVER"
+
+          if ! az containerapp env show --name $ACA_ENV_NAME --resource-group $RESOURCE_GROUP >/dev/null 2>&1; then
+            echo "Container Apps Environment $ACA_ENV_NAME no existe. Creando..."
+            az containerapp env create \
+              --name $ACA_ENV_NAME \
+              --resource-group $RESOURCE_GROUP \
+              --location eastus
+          fi
+
+          if ! az containerapp show --name $APP_NAME --resource-group $RESOURCE_GROUP >/dev/null 2>&1; then
+            echo "Container App $APP_NAME no existe. Creando..."
+            az containerapp create \
+              --name $APP_NAME \
+              --resource-group $RESOURCE_GROUP \
+              --environment $ACA_ENV_NAME \
+              --image mcr.microsoft.com/azuredocs/containerapps-helloworld:latest \
+              --target-port 80 \
+              --ingress external \
+              --system-assigned \
+              --env-vars ENV=${{ vars.ENV }} API_PROVIDER_URL=${{ vars.API_PROVIDER_URL }}
+          fi
+
+          PRINCIPAL_ID=$(az containerapp show --name $APP_NAME --resource-group $RESOURCE_GROUP --query identity.principalId --output tsv)
+          az role assignment create --assignee $PRINCIPAL_ID --scope $ACR_ID --role AcrPull >/dev/null 2>&1 || true
           
           # Configurar la Container App para usar managed identity con el ACR
           az containerapp registry set \

@@ -75,7 +75,7 @@ jobs:
           IMAGE_NAME=acr${{ vars.APELLIDO }}.azurecr.io/my-nodejs-app
           TAG=${{ steps.short.outputs.short_sha }}
           APP_NAME=aca-ms-${{ vars.APELLIDO }}-${{ vars.ENV }}
-          ACA_ENV_NAME=aca-env-${{ vars.APELLIDO }}-${{ vars.ENV }}
+          ACA_ENV_NAME=aca-env-${{ vars.APELLIDO }}-dev
           RESOURCE_GROUP=rg-cicd-terraform-app-${{ vars.APELLIDO }}
           ACR_NAME=acr${{ vars.APELLIDO }}
 
@@ -170,7 +170,7 @@ jobs:
           IMAGE_NAME=acr${{ vars.APELLIDO }}.azurecr.io/my-nodejs-app
           TAG=${{ steps.short.outputs.short_sha }}
           APP_NAME=aca-ms-${{ vars.APELLIDO }}-${{ vars.ENV }}
-          ACA_ENV_NAME=aca-env-${{ vars.APELLIDO }}-${{ vars.ENV }}
+          ACA_ENV_NAME=aca-env-${{ vars.APELLIDO }}-dev
           RESOURCE_GROUP=rg-cicd-terraform-app-${{ vars.APELLIDO }}
           ACR_NAME=acr${{ vars.APELLIDO }}
 
@@ -264,7 +264,7 @@ jobs:
           IMAGE_NAME=acr${{ vars.APELLIDO }}.azurecr.io/my-nodejs-app
           TAG=${{ steps.short.outputs.short_sha }}
           APP_NAME=aca-ms-${{ vars.APELLIDO }}-${{ vars.ENV }}
-          ACA_ENV_NAME=aca-env-${{ vars.APELLIDO }}-${{ vars.ENV }}
+          ACA_ENV_NAME=aca-env-${{ vars.APELLIDO }}-dev
           RESOURCE_GROUP=rg-cicd-terraform-app-${{ vars.APELLIDO }}
           ACR_NAME=acr${{ vars.APELLIDO }}
 
